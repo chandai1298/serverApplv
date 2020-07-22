@@ -36,6 +36,9 @@ app.get("/getDataApp_Home", function (req, res) {
     }
   });
 });
+app.get("/he", function (req, res) {
+  res.send("helo");
+});
 // du lieu config
 app.post("/getConfig", function (req, res) {
   var user = req.body;

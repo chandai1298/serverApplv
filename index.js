@@ -6,6 +6,7 @@ const mysql = require("mysql");
 
 app.use(bodyParser.json({ type: "application/json" }));
 app.use(bodyParser.urlencoded({ extended: true }));
+
 var con = mysql.createConnection({
   host: "35.220.157.219",
   port: "3306",

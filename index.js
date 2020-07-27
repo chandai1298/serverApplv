@@ -43,29 +43,12 @@ app.get("/he", function (req, res) {
 app.post("/getConfig", function (req, res) {
   var user = req.body;
   var query =
-    "select * from overview where id_user='" +
+    "select * from overview where id_user=" +
     user.id_user +
-    "' and type='" +
+    " and type='" +
     user.type +
     "'";
   con.query(query, [user.id_user, user.type], (err, rows, fields) => {
-    if (!err) {
-      res.send(rows);
-    } else {
-      console.log(err);
-    }
-  });
-});
-//du lieu cac cau hoi
-app.post("/getQuestion", function (req, res) {
-  var category = req.body;
-  var query =
-    "select q.question,q.detail_question,q.answer,q.image,q.sound,q.id\
-  from question as q,lession as l,category as c\
-  WHERE c.id=l.id_category and l.id=q.id_lession and c.id=" +
-    category.id +
-    " ORDER BY RAND() LIMIT 8";
-  con.query(query, [category.id], (err, rows, fields) => {
     if (!err) {
       res.send(rows);
     } else {
@@ -77,7 +60,7 @@ app.post("/getQuestion", function (req, res) {
 app.post("/getLession", function (req, res) {
   var category = req.body;
   var query =
-    "select l.id, l.id_category, l.link, l.name from lession l JOIN category c on l.id_category = c.id where c.id=" +
+    "select l.id, l.id_category, l.link, l.name,l.image,l.imageCheck from lession l JOIN category c on l.id_category = c.id where c.id=" +
     category.id +
     " and c.isActive=1 and l.isActive=1";
 
@@ -120,16 +103,16 @@ app.get("/getPartListening", function (req, res) {
 app.post("/getQuestionPart", function (req, res) {
   var category = req.body;
   var query =
-    "select q.question,q.detail_question,q.answer,q.image,q.sound,q.id,q.id_part,q.id_lession\
-  from question as q,lession as l,category as c, part as p\
-  WHERE c.id=l.id_category and l.id=q.id_lession and c.id=" +
-    category.id +
-    " and p.id=q.id_part and\
-  p.id=" +
+    "select q.id,q.id_part,q.id_lession,q.question,q.dapanA,q.dapanB,q.dapanC,q.dapanD,q.answer,q.image,q.sound\
+  from question as q,lession as l,category as c, part as p, (SELECT q.sound as ss\
+  from question q where q.id_part= " +
     category.id_part +
-    " and l.id=" +
+    " GROUP BY q.sound ORDER BY RAND() LIMIT 5) as q2 \
+   WHERE c.id=l.id_category and l.id=q.id_lession and c.id=" +
+    category.id +
+    " and p.id=q.id_part and l.id=" +
     category.id_lession +
-    " ORDER BY RAND() LIMIT 8";
+    " and q.sound=q2.ss;";
   con.query(
     query,
     [category.id, category.id_part, category.id_lession],

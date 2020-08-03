@@ -45,9 +45,8 @@ app.post("/getConfig", function (req, res) {
   var query =
     "select * from overview where id_user=" +
     user.id_user +
-    " and type='" +
-    user.type +
-    "'";
+    " and type=" +
+    user.type;
   con.query(query, [user.id_user, user.type], (err, rows, fields) => {
     if (!err) {
       res.send(rows);
@@ -127,10 +126,10 @@ app.post("/getQuestionPart", function (req, res) {
 });
 // Information USER
 app.get("/getData", function (req, res) {
-  con.query("select * from user", function (error, rows, fields) {
+  con.query("select * from User", function (error, rows, fields) {
     if (error) console.log(error);
     else {
-      console.log(rows);
+      console.log("ok");
       res.send(rows);
     }
   });
@@ -138,7 +137,7 @@ app.get("/getData", function (req, res) {
 
 app.post("/sendData", function (req, res) {
   var query =
-    "INSERT INTO user (username, email, password)  VALUES ('" +
+    "INSERT INTO User (username, email, password)  VALUES ('" +
     req.body.username +
     "', '" +
     req.body.email +
@@ -156,7 +155,7 @@ app.post("/sendData", function (req, res) {
 app.post("/checkLogin", function (req, res) {
   var user = req.body;
   //   var query = "CALL login ('" + user.username + "','" + user.password + "')";
-  var query = "select * from user where username='" + user.username + "'";
+  var query = "select * from User where Username='" + user.username + "'";
   con.query(query, [user.username], (err, rows, fields) => {
     if (!err) {
       res.send(rows);

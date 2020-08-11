@@ -134,6 +134,18 @@ app.get("/getData", function (req, res) {
     }
   });
 });
+app.post("/getWord", function (req, res) {
+  var user = req.body;
+  //   var query = "CALL login ('" + user.username + "','" + user.password + "')";
+  var query = "select * from Dictionary where word='" + user.word + "'";
+  con.query(query, [user.word], (err, rows, fields) => {
+    if (!err) {
+      res.send(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
 
 app.post("/sendData", function (req, res) {
   var query =
@@ -163,4 +175,43 @@ app.post("/checkLogin", function (req, res) {
       console.log(err);
     }
   });
+});
+app.post("/RankOfUser", function (req, res) {
+  var user = req.body;
+  //   var query = "CALL login ('" + user.username + "','" + user.password + "')";
+  var query = "SELECT * FROM rank where id=" + user.id;
+  con.query(query, [user.id], (err, rows, fields) => {
+    if (!err) {
+      res.send(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+app.put("/UpdateAvatar", function (req, res) {
+  var user = req.body;
+  var query = "UPDATE User SET Avatar = ? WHERE Id = ?";
+  con.query(query, [user.Avatar, user.Id], (err, rows, fields) => {
+    if (!err) {
+      res.send("Cập nhật thành công!");
+    } else {
+      console.log(err);
+    }
+  });
+});
+app.put("/UpdateScore", function (req, res) {
+  var user = req.body;
+  var query =
+    "UPDATE rank SET crown = ?, current_score = ?, total_score = ? WHERE id_user = ?";
+  con.query(
+    query,
+    [user.crown, user.current_score, user.total_score, user.id_user],
+    (err, rows, fields) => {
+      if (!err) {
+        res.send("Cập nhật thành công!");
+      } else {
+        console.log(err);
+      }
+    }
+  );
 });

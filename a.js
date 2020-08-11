@@ -33,17 +33,17 @@ let tru4 = "";
 let word = "";
 let pronounced = "";
 con.connect(function (error) {
-  fs.readFile("anhviet109K.dict", "utf-8", (err, data) => {
+  fs.readFile("vietanh.dict", "utf-8", (err, data) => {
     if (err) throw err;
     var res = data.split("@");
-    for (let index = 1; index < 5000; index++) {
+    for (let index = 1; index < res.length; index++) {
       var item = res[index];
       word = item.split("\n")[0].split(" /")[0].trim();
       // if (word === "across") {
-      pronounced =
-        item.split("\n")[0].split(" /")[1] === undefined
-          ? ""
-          : item.split("\n*  ")[0].split(" ")[1].trim();
+      // pronounced =
+      //   item.split("\n")[0].split(" /")[1] === undefined
+      //     ? ""
+      //     : item.split("\n*  ")[0].split(" ")[1].trim();
       if (item.split("*  ")[1] !== undefined) {
         sao = item.split("*  ")[1].split("\n- ")[0].toString().trim();
         tru = item
@@ -75,13 +75,11 @@ con.connect(function (error) {
       if (sao === "") tru = item.replace(word, "").trim();
 
       var query =
-        "INSERT INTO Dictionary \
-    (Word,  Pronounced,  Type1, Content1, Type2,  Content2,  Type3,  Content3,  Type4,  Content4)\
+        "INSERT INTO DictionaryVieToEn \
+    (Word,  Type1, Content1, Type2,  Content2,  Type3,  Content3,  Type4,  Content4)\
       VALUES  ('" +
         word +
-        "', ' " +
-        pronounced +
-        "', ' " +
+        "', ' "  +
         sao +
         "', ' " +
         tru +
@@ -98,16 +96,12 @@ con.connect(function (error) {
         "', ' " +
         tru4 +
         "')";
-      con.query(
-        query,
-        [word, pronounced, sao, tru, sao2, tru2, sao3, tru3, sao4, tru4],
-        function (error, rows, fields) {
-          if (error) console.log(error);
-          else {
-            console.log(rows);
-          }
+      con.query(query, function (error, rows, fields) {
+        if (error) console.log(error);
+        else {
+          console.log(rows);
         }
-      );
+      });
       sao = "";
       sao2 = "";
       sao3 = "";
@@ -117,7 +111,7 @@ con.connect(function (error) {
       tru3 = "";
       tru4 = "";
       word = "";
-      pronounced = "";
+      // pronounced = "";
       // }
     }
     // console.log(word);
